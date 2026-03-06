@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H1 Motors</title>
+
+<style>
+
+
+
+
+.close-btn {
+  position: absolute;
+  top: 25px;
+  right: 40px;
+  font-size: 45px;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #00f0ff;
+}
+
+@keyframes zoomEffect {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s ease;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #0f0f14;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  position: fixed;
+  width: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  transition: 0.3s;
+}
+
+nav.scrolled {
+  background: #000;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00f0ff;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #00f0ff;
+}
+
+/* ===== HERO ===== */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 80px;
+  background: linear-gradient(to right, #000000cc, #00000099),
+              url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') center/cover;
+}
+
+.hero h1 {
+  font-size: 60px;
+  color: #00f0ff;
+  animation: glow 2s infinite alternate;
+}
+
+.hero p {
+  margin-top: 20px;
+  font-size: 20px;
+  max-width: 500px;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #00f0ff; }
+  to { text-shadow: 0 0 25px #00f0ff; }
+}
+
+/* ===== SECTION ===== */
+section {
+  padding: 100px 50px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 40px;
+  color: #00f0ff;
+}
+
+/* ===== FILTER ===== */
+.filter-buttons {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.filter-buttons button {
+  background: #1c1c25;
+  color: white;
+  border: 1px solid #00f0ff;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filter-buttons button:hover {
+  background: #00f0ff;
+  color: black;
+}
+
+/* ===== SEARCH ===== */
+.search-bar {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.search-bar input {
+  padding: 10px;
+  width: 300px;
+  background: #1c1c25;
+  border: 1px solid #00f0ff;
+  color: white;
+}
+
+/* ===== GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #1c1c25;
+  padding: 15px;
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,240,255,0.15);
+
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+
+
+.card h3 {
+  margin-top: 10px;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 20px #00f0ff55;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #1c1c25;
+  padding: 30px;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+.close {
+  float: right;
+  cursor: pointer;
+  color: #00f0ff;
+}
+
+/* ===== BACK TO TOP ===== */
+#topBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 10px 15px;
+  background: #00f0ff;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .hero {
+    padding-left: 30px;
+  }
+  .hero h1 {
+    font-size: 40px;
+  }
+}
+
+/* LIGHTBOX STYLING */
+.lightbox {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  background: rgba(0, 0, 0, 0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 85%;
+  border-radius: 15px;
+  box-shadow: 0 0 50px rgba(0, 240, 255, 0.6);
+  animation: zoomEffect 0.3s ease;
+}
+
+.close-btn {
+  position: absolute;
+  top: 25px;
+  right: 40px;
+  font-size: 45px;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #00f0ff;
+}
+
+@keyframes zoomEffect {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+
+#loader{
+position:fixed;
+inset:0;
+background:#000;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:99999;
+}
+
+.speedometer{
+width:200px;
+height:200px;
+border:8px solid #00f0ff;
+border-radius:50%;
+position:relative;
+}
+
+.needle{
+width:4px;
+height:90px;
+background:#00f0ff;
+position:absolute;
+bottom:50%;
+left:50%;
+transform-origin:bottom;
+animation:speed 2s ease forwards;
+}
+
+@keyframes speed{
+0%{transform:rotate(-120deg);}
+100%{transform:rotate(120deg);}
+}
+
+
+
+.parallax{
+height:80vh;
+background:url('https://images.unsplash.com/photo-1493238792000-8113da705763')
+center/cover fixed;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.parallax-text{
+background:rgba(0,0,0,0.6);
+padding:40px;
+border-radius:10px;
+}
+
+.parallax h2{
+font-size:50px;
+color:#00f0ff;
+}
+
+.preview{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.95);
+display:none;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+text-align:center;
+}
+
+.preview img{
+max-width:80%;
+max-height:70%;
+border-radius:15px;
+box-shadow:0 0 40px #00f0ff;
+}
+
+.preview h2{
+margin-top:20px;
+color:#00f0ff;
+}
+
+.close-preview{
+position:absolute;
+top:30px;
+right:50px;
+font-size:50px;
+cursor:pointer;
+color:white;
+}
+
+
+
+.car-scroll-section{
+height:120vh;
+position:relative;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+}
+
+.road{
+width:100%;
+height:200px;
+position:relative;
+margin-top:50px;
+background:linear-gradient(#111,#111);
+border-top:4px dashed #555;
+border-bottom:4px dashed #555;
+}
+
+.scroll-car{
+position:absolute;
+bottom:20px;
+left:-300px;
+width:300px;
+transition:transform 0.1s linear;
+}
+
+
+
+
+
+
+
+
+
+</style>
+
+</head>
+
+<body>
+
+
+<div id="loader">
+  <div class="speedometer">
+    <div class="needle"></div>
+  </div>
+  <h2>H1 Motors</h2>
+</div>
+
+
+
+
+<!-- FULLSCREEN IMAGE LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+  <span class="close-btn">&times;</span>
+  <img id="lightbox-img">
+</div>
+
+ 
+
+<nav id="navbar">
+  <div class="logo">H1 Motors</div>
+  <ul>
+    <li><a href="#showcase">Showcase</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <h1>DOMINATE THE ROAD</h1>
+  <p>Explore the most powerful cars and bikes in the world. Performance. Speed. Luxury.</p>
+</div>
+
+
+<section class="parallax">
+  <div class="parallax-text">
+    <h2>Pure Performance</h2>
+    <p>Machines built for speed, luxury and adrenaline.</p>
+  </div>
+</section>
+
+
+<section class="car-scroll-section">
+  <h2 class="section-title">Feel The Motion</h2>
+
+  <div class="road">
+    <img src="download (1).jpeg" class="scroll-car" id="scrollCar" width="300px" height="200px">
+  </div>
+
+</section>
+
+
+<section id="showcase">
+  <h2 class="section-title">Vehicle Showcase</h2>
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search vehicles...">
+  </div>
+
+  <div class="filter-buttons">
+    <button onclick="filterSelection('all')">All</button>
+    <button onclick="filterSelection('car')">Cars</button>
+    <button onclick="filterSelection('bike')">Bikes</button>
+  </div>
+
+<div class="grid" id="vehicleGrid">
+
+<!-- ===================== CARS ===================== -->
+
+<div class="card car" data-price="$220,000">
+  <img src="Ahhh just look at it's model bro🤛🏻.jpeg">
+  <h3>Lamborghini Aventador</h3>
+  <p class="price">$220,000</p>
+</div>
+
+<div class="card car" data-price="$250,000">
+  <img src="download.jpeg">
+  <h3>Ferrari 488</h3>
+  <p class="price">$250,000</p>
+</div>
+
+<div class="card car" data-price="$180,000">
+  <img src="Turn your imagination into reality with Adventure….jpeg">
+  <h3>Porsche 911 Turbo</h3>
+  <p class="price">$180,000</p>
+</div>
+
+<div class="card car" data-price="$140,000">
+  <img src="Experience the power and elegance of this red BMW….jpeg">
+  <h3>BMW M8</h3>
+  <p class="price">$140,000</p>
+</div>
+
+<div class="card car" data-price="$120,000">
+  <img src="Audi R8.jpeg">
+  <h3>Audi R8</h3>
+  <p class="price">$120,000</p>
+</div>
+
+<div class="card car" data-price="$300,000">
+  <img src="A light and strong supercar shaped by the forces….jpeg">
+  <h3>McLaren 720S</h3>
+  <p class="price">$300,000</p>
+</div>
+
+<div class="card car" data-price="$70,000">
+  <img src="Ford Mustang GT, conceptcar, designer by kenAI art….jpeg">
+  <h3>Ford Mustang GT</h3>
+  <p class="price">$70,000</p>
+</div>
+
+<div class="card car" data-price="$90,000">
+  <img src="CARRO_-114.jpeg">
+  <h3>Chevrolet Camaro ZL1</h3>
+  <p class="price">$90,000</p>
+</div>
+
+<div class="card car" data-price="$110,000">
+  <img src="Nissan GTR 💀.jpeg">
+  <h3>Nissan GT-R</h3>
+  <p class="price">$110,000</p>
+</div>
+
+<div class="card car" data-price="$60,000">
+  <img src="The Supra is powered by two BMW-sourced engine….jpeg">
+  <h3>Toyota Supra</h3>
+  <p class="price">$60,000</p>
+</div>
+
+<div class="card car" data-price="$75,000">
+  <img src="The Dodge Hellcat is a beast of a muscle car….jpeg">
+  <h3>Dodge Challenger</h3>
+  <p class="price">$75,000</p>
+</div>
+
+<div class="card car" data-price="$95,000">
+  <img src="The Killer AMG GT Black Series 💉🩸.jpeg">
+  <h3>Mercedes AMG GT</h3>
+  <p class="price">$95,000</p>
+</div>
+
+<div class="card car" data-price="$130,000">
+  <img src="F-Type2 Luxurious black sports car cruising past….jpeg">
+  <h3>Jaguar F-Type</h3>
+  <p class="price">$130,000</p>
+</div>
+
+<div class="card car" data-price="$85,000">
+  <img src="BMW M4 Competition 🔥🔥🔥.jpeg">
+  <h3>BMW M4 Competition</h3>
+  <p class="price">$85,000</p>
+</div>
+
+<div class="card car" data-price="$150,000">
+  <img src="download (1).jpeg">
+  <h3>Audi RS7</h3>
+  <p class="price">$150,000</p>
+</div>
+
+<div class="card car" data-price="$50,000">
+  <img src="download (2).jpeg">
+  <h3>Subaru WRX STI</h3>
+  <p class="price">$50,000</p>
+</div>
+
+<div class="card car" data-price="$45,000">
+  <img src="Volkswagen Golf R mk8_5.jpeg">
+  <h3>Volkswagen Golf R</h3>
+  <p class="price">$45,000</p>
+</div>
+
+<div class="card car" data-price="$210,000">
+  <img src="Step into the future of speed with McLaren….jpeg">
+  <h3>McLaren Artura</h3>
+  <p class="price">$210,000</p>
+</div>
+
+<div class="card car" data-price="$190,000">
+  <img src="download (3).jpeg">
+  <h3>Lexus LC500</h3>
+  <p class="price">$190,000</p>
+</div>
+
+<div class="card car" data-price="$400,000">
+  <img src="Ultra detailed vertical shot of a Bugatti Chiron….jpeg">
+  <h3>Bugatti Chiron</h3>
+  <p class="price">$400,000</p>
+</div>
+
+
+<!-- ===================== BIKES ===================== -->
+
+<div class="card bike" data-price="$25,000">
+  <img src="Yamaha R1 2020.jpeg">
+  <h3>Yamaha R1</h3>
+  <p class="price">$25,000</p>
+</div>
+
+<div class="card bike" data-price="$22,000">
+  <img src="ZX10R.jpeg">
+  <h3>Kawasaki Ninja ZX-10R</h3>
+  <p class="price">$22,000</p>
+</div>
+
+<div class="card bike" data-price="$18,000">
+  <img src="The Ducati Panigale V4 in a sleek matte black….jpeg">
+  <h3>Ducati Panigale V4</h3>
+  <p class="price">$18,000</p>
+</div>
+
+<div class="card bike" data-price="$20,000">
+  <img src="a..jpeg">
+  <h3>BMW S1000RR</h3>
+  <p class="price">$20,000</p>
+</div>
+
+<div class="card bike" data-price="$15,000">
+  <img src="Honda CBR1000-RR 🏍✨️.jpeg">
+  <h3>Honda CBR1000RR</h3>
+  <p class="price">$15,000</p>
+</div>
+
+<div class="card bike" data-price="$17,000">
+  <img src="The Suzuki GSX-R1000 stands as a pinnacle in the….jpeg">
+  <h3>Suzuki GSX-R1000</h3>
+  <p class="price">$17,000</p>
+</div>
+
+<div class="card bike" data-price="$12,000">
+  <img src="KTM RS390 fully modified in red color pic 4k _.jpeg">
+  <h3>KTM RC 390</h3>
+  <p class="price">$12,000</p>
+</div>
+
+<div class="card bike" data-price="$14,000">
+  <img src="Ghost ✖️👻✖️.jpeg">
+  <h3>Aprilia RSV4</h3>
+  <p class="price">$14,000</p>
+</div>
+
+<div class="card bike" data-price="$10,000">
+  <img src="Triumph Daytona 675r.jpeg">
+  <h3>Triumph Daytona 675</h3>
+  <p class="price">$10,000</p>
+</div>
+
+<div class="card bike" data-price="$9,000">
+  <img src="download (4).jpeg">
+  <h3>Harley Davidson Sportster</h3>
+  <p class="price">$9,000</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="about">
+  <h2 class="section-title">About Us</h2>
+  <p style="text-align:center; max-width:700px; margin:auto;">
+    Extreme Motors is a futuristic automotive platform showcasing the best performance machines on Earth.
+  </p>
+</section>
+
+<!-- MODAL -->
+<div id="preview" class="preview">
+  <span class="close-preview">&times;</span>
+  <img id="previewImg">
+  <h2 id="previewTitle"></h2>
+</div>
+
+<button id="topBtn" onclick="topFunction()">Top</button>
+
+<script>
+
+const preview = document.getElementById("preview");
+const previewImg = document.getElementById("previewImg");
+const previewTitle = document.getElementById("previewTitle");
+const closePreview = document.querySelector(".close-preview");
+
+document.querySelectorAll(".card img").forEach(img =>{
+
+img.addEventListener("dblclick",function(e){
+
+e.stopPropagation();
+
+preview.style.display="flex";
+previewImg.src=this.src;
+previewTitle.innerText=this.closest(".card").querySelector("h3").innerText;
+
+});
+
+});
+
+closePreview.onclick=()=>{
+preview.style.display="none";
+};
+
+
+
+
+
+window.addEventListener("load", function(){
+setTimeout(()=>{
+document.getElementById("loader").style.display="none";
+},2000);
+});
+
+
+/* Sticky Navbar */
+window.onscroll = function() {
+  document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 50);
+  document.getElementById("topBtn").style.display = window.scrollY > 300 ? "block" : "none";
+};
+
+/* Filter */
+function filterSelection(category) {
+  let cards = document.getElementsByClassName("card");
+  for (let i = 0; i < cards.length; i++) {
+    cards[i].style.display =
+      category === "all" || cards[i].classList.contains(category)
+      ? "block" : "none";
+  }
+}
+
+/* Search */
+document.getElementById("search").addEventListener("keyup", function() {
+  let value = this.value.toLowerCase();
+  let cards = document.getElementsByClassName("card");
+
+  for (let i = 0; i < cards.length; i++) {
+    let text = cards[i].innerText.toLowerCase();
+    cards[i].style.display = text.includes(value) ? "block" : "none";
+  }
+});
+
+/* Modal */
+let cards = document.querySelectorAll(".card");
+let modal = document.getElementById("modal");
+let modalTitle = document.getElementById("modalTitle");
+
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    modal.style.display = "flex";
+    modalTitle.innerText = card.innerText;
+  });
+});
+
+function closeModal() {
+  modal.style.display = "none";
+}
+
+/* Back to top */
+function topFunction() {
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// SELECT ALL VEHICLE IMAGES
+const allImages = document.querySelectorAll(".card img");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const closeBtn = document.querySelector(".close-btn");
+
+// OPEN LIGHTBOX ON IMAGE CLICK
+allImages.forEach(img => {
+  img.addEventListener("click", function(e) {
+    e.stopPropagation(); // prevents triggering other click events
+    lightbox.style.display = "flex";
+    lightboxImg.src = this.src;
+  });
+});
+
+// CLOSE LIGHTBOX ON X CLICK
+closeBtn.addEventListener("click", () => {
+  lightbox.style.display = "none";
+});
+
+// CLOSE LIGHTBOX ON BACKGROUND CLICK
+lightbox.addEventListener("click", () => {
+  lightbox.style.display = "none";
+
+
+// 3D HOVER EFFECT
+const cards3D = document.querySelectorAll(".card");
+
+cards3D.forEach(card => {
+
+  card.addEventListener("mousemove", (e) => {
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = -(y - centerY) / 12;
+    const rotateY = (x - centerX) / 12;
+
+    card.style.transform =
+      `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "rotateX(0) rotateY(0) scale(1)";
+  });
+
+});
+
+});
+
+const car = document.getElementById("scrollCar");
+
+window.addEventListener("scroll", () => {
+
+  const section = document.querySelector(".car-scroll-section");
+  const rect = section.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if(rect.top < windowHeight && rect.bottom > 0){
+
+    let progress = (windowHeight - rect.top) / (windowHeight + rect.height);
+    let moveX = progress * window.innerWidth;
+
+    car.style.transform = `translateX(${moveX}px)`;
+
+  }
+
+});
+
+</script>
+
+</body>
+ 
+</html>
